@@ -12,6 +12,7 @@ import random
 import csv
 import bs4 as bs
 import json
+import subprocess
 
 # selenium
 from selenium import webdriver
@@ -22,13 +23,17 @@ capabilities = DesiredCapabilities.CHROME.copy()
 #capabilities['goog:loggingPrefs'] = {'performance': 'ALL'}
 capabilities['loggingPrefs'] = { 'performance':'ALL' }
 
+
 from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 chrome_options.add_experimental_option('w3c', False)
 # chrome_options.add_argument("--headless") # Run selenium in headless mode
 
-#driver = webdriver.Chrome(ChromeDriverManager(path="/kellogg/proj/<YOUR_NETID>/drivers").install(), desired_capabilities=capabilities,options=chrome_options)
-driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=capabilities,options=chrome_options)
+
+
+
+driver = webdriver.Chrome(ChromeDriverManager(path="/kellogg/proj/awc6034/drivers").install(), desired_capabilities=capabilities,options=chrome_options)
+#driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=capabilities,options=chrome_options)
 
 
 #########################################
@@ -229,6 +234,21 @@ def data_exists_error(source):
                 return 0
         except:
             return 0
+
+###########################################
+# parsing starter (starts parsing after 10000 files are downloaded)
+def parsing_starter(page_error, storage_error, download_counter, file_downloads = 10000):
+    if page_error == 0 and storage_error == 0:
+        download_counter = download_counter + 1
+        print(download_counter)
+
+    if download_counter > file_downloads:
+        print("I started to parse.")
+        p = subprocess.Popen("python 2_yahoo_parser.py", stdout=subprocess.PIPE, shell=True)
+        download_counter = 0
+
+    return download_counter
+
 
 
 ###########################################

@@ -43,6 +43,7 @@ def main():
     page_error_counter = 0
     storage_error_counter = 0
     content_error_counter = 0
+    download_counter = 0
 
     #loop through tickers to access and save html for yahoo finance pages
     for tick in tickerList[0:5]: 
@@ -55,7 +56,7 @@ def main():
         #source_select = hh.page_get_request(url) # source data list
         source_select = hh.page_get_selenium(url) # source data list
         source = source_select[0] # source content
-        response_code = source_select[1] # source status code
+        response_code = source_select[1] # source status code (0 or 1)
         page_error = int(source_select[2]) # status code error (0 or 1)
 
         # save page
@@ -65,11 +66,15 @@ def main():
         value_error = hh.data_exists_error(source) # sanity check for html element error (0 or 1)
         hh.progress_tracker(response_code, progress_select[1], tick, progress_file, value_error) # save progress file
 
+        # start parsing files after successfully downloading a certain number
+        download_counter = hh.parsing_starter(page_error, storage_error, download_counter, file_downloads = 10000)
+        #download_counter = 500000
+
         # abort code after 5 consecutive errors
         page_error_counter = (page_error_counter * page_error) + page_error
         storage_error_counter = (storage_error_counter * storage_error) + storage_error
         content_error_counter = (content_error_counter * value_error) + value_error
-        content_error_counter = 4
+        #content_error_counter = 4
         if hh.error_kill_switch(page_error_counter, storage_error_counter, content_error_counter) == "yes":
             p = subprocess.Popen("source email_me.sh", stdout=subprocess.PIPE, shell=True)
             break
