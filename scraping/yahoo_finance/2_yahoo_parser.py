@@ -4,7 +4,7 @@
 
 # libraries used
 import os
-import 2a_parser_helpers as ph # file for parsing functions
+import parser_helpers as ph # file for parsing functions
 import argparse
 
 #########################################
