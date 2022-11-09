@@ -1,0 +1,20 @@
+# Create scrape.yml file
+# begin scrape.yml
+name: scrape_env
+ 
+channels:
+  - conda-forge
+  - anaconda
+  - defaults
+dependencies:
+  - anaconda
+  - pip
+  - beautifulsoup4 
+  - selenium 
+  - jupyter 
+
+ 
+# end scrape.yml
+ 
+# create conda environment
+#conda env create -f scrape.yml
